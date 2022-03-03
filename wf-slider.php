@@ -33,10 +33,13 @@ if( ! defined('ABSPATH') ) {
     exit;
 }
 
-if ( ! class_exists( 'WF_Slider' ) ) {
-    class WF_Slider{
+if ( ! class_exists( 'WFSlider' ) ) {
+    class WFSlider{
         function __construct(){
             $this->defineConstants();
+
+            require_once( WF_SLIDER_PATH . 'post-types/class.wf-slider-cpt.php');
+            $WFSliderPostType = new WFSliderPostType();
         }
 
         public function defineConstants() {
@@ -59,9 +62,9 @@ if ( ! class_exists( 'WF_Slider' ) ) {
     }
 }
 
-if ( class_exists( 'WF_Slider' ) ) {
-    register_activation_hook( __FILE__, array( 'WF_Slider', 'activate' ) );
-    register_deactivation_hook( __FILE__, array( 'WF_Slider', 'deactivate' ) );
-    register_uninstall_hook( __FILE__, array( 'WF_Slider', 'uninstall' ) );
-    $wf_slider = new WF_Slider();
+if ( class_exists( 'WFSlider' ) ) {
+    register_activation_hook( __FILE__, array( 'WFSlider', 'activate' ) );
+    register_deactivation_hook( __FILE__, array( 'WFSlider', 'deactivate' ) );
+    register_uninstall_hook( __FILE__, array( 'WFSlider', 'uninstall' ) );
+    $wfSlider = new WFSlider();
 }

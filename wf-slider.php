@@ -32,3 +32,36 @@ along with WF Slider. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
 if( ! defined('ABSPATH') ) {
     exit;
 }
+
+if ( ! class_exists( 'WF_Slider' ) ) {
+    class WF_Slider{
+        function __construct(){
+            $this->defineConstants();
+        }
+
+        public function defineConstants() {
+            define('WF_SLIDER_PATH', plugin_dir_path( __FILE__ ) );
+            define('WF_SLIDER_URL', plugin_dir_url( __FILE__ ) );
+            define('WF_SLIDER_VERSION', '1.0.0' );
+        }
+
+        public static function activate() {
+            update_option( 'rewrite_rules', '' );
+        }
+
+        public static function deactivate() {
+            flush_rewrite_rules();
+        }
+
+        public static function uninstall() {
+
+        }
+    }
+}
+
+if ( class_exists( 'WF_Slider' ) ) {
+    register_activation_hook( __FILE__, array( 'WF_Slider', 'activate' ) );
+    register_deactivation_hook( __FILE__, array( 'WF_Slider', 'deactivate' ) );
+    register_uninstall_hook( __FILE__, array( 'WF_Slider', 'uninstall' ) );
+    $wf_slider = new WF_Slider();
+}

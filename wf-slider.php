@@ -54,6 +54,7 @@ if ( ! class_exists( 'WFSlider' ) ) {
 
         public static function deactivate() {
             flush_rewrite_rules();
+            unregister_post_type( 'wf-slider' );
         }
 
         public static function uninstall() {

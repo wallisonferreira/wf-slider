@@ -57,14 +57,44 @@ if ( ! class_exists( 'WFSliderPostType' ) ){
         }
 
         public function savePost( $postID ) {
+            // verify if nonce key in the form is as expected, cause false return nothing
+            if ( isset( $_POST['wf_slider_nonce'] ) ) {
+                if ( ! wp_verify_nonce( $_POST['wf_slider_nonce'], 'wf_slider_nonce' ) ) {
+                    return;
+                }
+            }
+
+            // verify if wordpress form is doing autosave, cause true return nothing
+            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+                return;
+            }
+
+            // verify if user have permissions to edit post type wf-slider
+            if ( isset ($_POST['post_type'] ) && $_POST['post_type'] === 'wf-slider' ) {
+                if ( ! current_user_can( 'edit_page', $postID ) ) {
+                    return;
+                } elseif ( ! current_user_can( 'edit_page', $postID ) ) {
+                    return;
+                }
+            }
+
             if ( isset(  $_POST['action'] ) && $_POST['action'] == 'editpost' ) {
                 $old_link_text = get_post_meta( $postID, 'wf_slider_link_text', true );
                 $new_link_text = $_POST['wf_slider_link_text'];
                 $old_link_url = get_post_meta( $postID, 'wf_slider_link_url', true );
                 $new_link_url = $_POST['wf_slider_link_url'];
 
-                update_post_meta( $postID, 'wf_slider_link_text', $new_link_text, $old_link_text );
-                update_post_meta( $postID, 'wf_slider_link_url', $new_link_url, $old_link_url );
+                if ( empty ( $new_link_text ) ) {
+                    update_post_meta( $postID, 'wf_slider_link_text', 'Add some text' );
+                } else {
+                    update_post_meta( $postID, 'wf_slider_link_text', sanitize_text_field( $new_link_text ), $old_link_text );
+                }
+
+                if ( empty( $new_link_url ) ) {
+                    update_post_meta( $postID, 'wf_slider_link_url', '#' );
+                } else {
+                    update_post_meta( $postID, 'wf_slider_link_url', esc_url_raw( $new_link_url ), $old_link_url );
+                }
             }
         }
     }

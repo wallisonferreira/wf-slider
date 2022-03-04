@@ -1,8 +1,6 @@
 <?php 
-    $meta = get_post_meta( $post->ID );
     $link_text = get_post_meta( $post->ID, 'wf_slider_link_text', true );
     $link_url = get_post_meta( $post->ID, 'wf_slider_link_url', true );
-    //var_dump( $link_text, $link_url );
 ?>
 <table class="form-table wf-slider-metabox"> 
 <input type="hidden" name="wf_slider_nonce" value="<?php echo wp_create_nonce( "wf_slider_nonce" ); ?>">
@@ -35,5 +33,5 @@
                 required
             >
         </td>
-    </tr>               
+    </tr>
 </table>

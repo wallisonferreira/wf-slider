@@ -6,6 +6,9 @@ if ( ! class_exists( 'WFSliderPostType' ) ){
             add_action( 'init', array( $this, 'createPostType') );
             add_action( 'add_meta_boxes', array( $this, 'addMetaBoxes' ) );
             add_action( 'save_post', array( $this, 'savePost' ), 10, 2 );
+            add_filter( 'manage_wf-slider_posts_columns', array( $this, 'sliderCptColumns') );
+            add_action( 'manage_wf-slider_posts_custom_column', array( $this, 'sliderCustomColumns' ), 10, 2 );
+            add_action( 'manage_edit-wf-slider_sortable_columns', array( $this, 'sliderSortableColumns') );
         }
 
         public function createPostType() {
@@ -41,6 +44,23 @@ if ( ! class_exists( 'WFSliderPostType' ) ){
             );
         }
 
+        public function sliderCustomColumns( $column, $postID) {
+            switch( $column ) {
+                case 'wf_slider_link_text':
+                    echo esc_html( get_post_meta( $postID, 'wf_slider_link_text', true ) );
+                break;
+                case 'wf_slider_link_url':
+                    echo esc_url( get_post_meta( $postID, 'wf_slider_link_url', true ) );
+                break;
+            }
+        }
+
+        public function sliderSortableColumns( $columns ) {
+            $columns['wf_slider_link_text'] = 'wf_slider_link_text';
+            $columns['wf_slider_link_url'] = 'wf_slider_link_url';
+            return $columns;
+        }
+
         public function addMetaBoxes() {
             add_meta_box(
                 'wf_slider_meta_box',
@@ -50,6 +70,12 @@ if ( ! class_exists( 'WFSliderPostType' ) ){
                 'normal',
                 'high',
             );
+        }
+
+        public function sliderCptColumns( $columns ) {
+            $columns['wf_slider_link_text'] = esc_html__( 'Link Text', 'wf-slider' );
+            $columns['wf_slider_link_url'] = esc_html__( 'Link URL', 'wf-slider' );
+            return $columns;
         }
 
         public function add_inner_meta_boxes( $post ) {

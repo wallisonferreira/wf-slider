@@ -29,7 +29,7 @@ if ( ! class_exists( 'WFSliderPostType' ) ){
                     ),
                     'hierarchical' => false,
                     'show_ui' => true,
-                    'show_in_menu' => true,
+                    'show_in_menu' => false, // aparecer ou não diretamente no menu
                     'menu_position' => 5,
                     'show_in_admin_bar' => true,
                     'show_in_nav_menus' => true,

@@ -38,6 +38,8 @@ if ( ! class_exists( 'WFSlider' ) ) {
         function __construct(){
             $this->defineConstants();
 
+            add_action( 'admin_menu', array( $this, 'addMenu' ) );
+
             require_once( WF_SLIDER_PATH . 'post-types/class.wf-slider-cpt.php');
             $WFSliderPostType = new WFSliderPostType();
         }
@@ -59,6 +61,42 @@ if ( ! class_exists( 'WFSlider' ) ) {
 
         public static function uninstall() {
 
+        }
+
+        // 'add_menu_page','add_options_page', 'add_theme_page'
+        public function addMenu() {
+            add_menu_page(
+                'WF Slider Options',
+                'WF Slider',
+                'manage_options',
+                'wf_slider_admin', // slug do menu pai
+                array( $this, 'wf_slider_settings_page' ),
+                'dashicons-images-alt2',
+            );
+
+            add_submenu_page(
+                'wf_slider_admin', // vínculo ao menu pai
+                'Manage Slides',
+                'Manage Slides',
+                'manage_options',
+                'edit.php?post_type=wf-slider', // carregando uma página de gerenciamento de slide
+                null,
+                null
+            );
+
+            add_submenu_page(
+                'wf_slider_admin', // vínculo ao menu pai
+                'Add New Slide',
+                'Add New Slide',
+                'manage_options',
+                'post-new.php?post_type=wf-slider', // carregando uma página de adição de slide
+                null,
+                null
+            );
+        }
+
+        public function wf_slider_settings_page() {
+            echo "This is a test page";
         }
     }
 }

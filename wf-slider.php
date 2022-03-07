@@ -42,6 +42,9 @@ if ( ! class_exists( 'WFSlider' ) ) {
 
             require_once( WF_SLIDER_PATH . 'post-types/class.wf-slider-cpt.php');
             $WFSliderPostType = new WFSliderPostType();
+
+            require_once( WF_SLIDER_PATH . 'class.wf-slider-settings.php');
+            $sliderSettings = new SliderSettings();
         }
 
         public function defineConstants() {
@@ -70,7 +73,7 @@ if ( ! class_exists( 'WFSlider' ) ) {
                 'WF Slider',
                 'manage_options',
                 'wf_slider_admin', // slug do menu pai
-                array( $this, 'wf_slider_settings_page' ),
+                array( $this, 'wf_slider_settings_page' ), // invoca o menu de configuração
                 'dashicons-images-alt2',
             );
 
@@ -95,8 +98,9 @@ if ( ! class_exists( 'WFSlider' ) ) {
             );
         }
 
+        // cria menu de configuração
         public function wf_slider_settings_page() {
-            echo "This is a test page";
+            require( WF_SLIDER_PATH .'views/settings-page.php' );
         }
     }
 }

@@ -38,8 +38,13 @@ if ( ! class_exists( 'WFSlider' ) ) {
         function __construct(){
             $this->defineConstants();
 
+            add_action( 'admin_menu', array( $this, 'addMenu' ) );
+
             require_once( WF_SLIDER_PATH . 'post-types/class.wf-slider-cpt.php');
             $WFSliderPostType = new WFSliderPostType();
+
+            require_once( WF_SLIDER_PATH . 'class.wf-slider-settings.php');
+            $sliderSettings = new SliderSettings();
         }
 
         public function defineConstants() {
@@ -59,6 +64,43 @@ if ( ! class_exists( 'WFSlider' ) ) {
 
         public static function uninstall() {
 
+        }
+
+        // 'add_menu_page','add_options_page', 'add_theme_page'
+        public function addMenu() {
+            add_menu_page(
+                'WF Slider Options',
+                'WF Slider',
+                'manage_options',
+                'wf_slider_admin', // slug do menu pai
+                array( $this, 'wf_slider_settings_page' ), // invoca o menu de configuração
+                'dashicons-images-alt2',
+            );
+
+            add_submenu_page(
+                'wf_slider_admin', // vínculo ao menu pai
+                'Manage Slides',
+                'Manage Slides',
+                'manage_options',
+                'edit.php?post_type=wf-slider', // carregando uma página de gerenciamento de slide
+                null,
+                null
+            );
+
+            add_submenu_page(
+                'wf_slider_admin', // vínculo ao menu pai
+                'Add New Slide',
+                'Add New Slide',
+                'manage_options',
+                'post-new.php?post_type=wf-slider', // carregando uma página de adição de slide
+                null,
+                null
+            );
+        }
+
+        // cria menu de configuração
+        public function wf_slider_settings_page() {
+            require( WF_SLIDER_PATH .'views/settings-page.php' );
         }
     }
 }

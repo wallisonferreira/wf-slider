@@ -44,6 +44,9 @@ if ( !class_exists( 'SliderSettings' ) ) {
                 array( $this, 'wf_slider_title_callback' ), 
                 'wf_slider_page2', // id da página que o campo deve aparecer
                 'wf_slider_second_section', // id da seção que o campo deve aparecer
+                array(
+                    'label_for' => 'wf_slider_title'
+                )
             );
 
             # Mostrar bullets do slider
@@ -53,6 +56,9 @@ if ( !class_exists( 'SliderSettings' ) ) {
                 array( $this, 'wf_slider_bullets_callback' ), 
                 'wf_slider_page2', // id da página que o campo deve aparecer
                 'wf_slider_second_section', // id da seção que o campo deve aparecer
+                array(
+                    'label_for' => 'wf_slider_bullets'
+                )
             );
 
             # Escolher estilo do slider
@@ -62,6 +68,13 @@ if ( !class_exists( 'SliderSettings' ) ) {
                 array( $this, 'wf_slider_style_callback' ), 
                 'wf_slider_page2', // id da página que o campo deve aparecer
                 'wf_slider_second_section', // id da seção que o campo deve aparecer
+                array( // passa um array como parâmetro para a função callback
+                    'items' => array(
+                        'style-1',
+                        'style-2'
+                    ),
+                    'label_for' => 'wf_slider_style'
+                )
             );
         }
 
@@ -71,7 +84,7 @@ if ( !class_exists( 'SliderSettings' ) ) {
             <?php
         }
 
-        public function wf_slider_title_callback() {
+        public function wf_slider_title_callback( $args ) {
             ?>
                 <input 
                 type="text"
@@ -81,7 +94,7 @@ if ( !class_exists( 'SliderSettings' ) ) {
             <?php
         }
 
-        public function wf_slider_bullets_callback() {
+        public function wf_slider_bullets_callback( $args ) {
             ?>
                 <input 
                     type="checkbox"
@@ -98,17 +111,20 @@ if ( !class_exists( 'SliderSettings' ) ) {
             <?php
         }
 
-        public function wf_slider_style_callback() {
+        public function wf_slider_style_callback( $args ) {
             ?>
                 <select 
                     name="wf_slider_options[wf_slider_style]" 
                     id="wf_slider_style">
-                    <option value="style-1"
-                        <?php isset( self::$options['wf_slider_style'] ) ? selected( "style-1", self::$options['wf_slider_style'], true 
-                        ) : '';?>>Style-1</option>
-                    <option value="style-2"
-                        <?php isset( self::$options['wf_slider_style'] ) ? selected( "style-2", self::$options['wf_slider_style'], true 
-                        ) : '';?>>Style-2</option>
+                    <?php foreach ( $args['items'] as $item): ?>
+                        <option value="<?php echo esc_attr( $item ); ?>"
+                            <?php
+                            isset( self::$options['wf_slider_style'] ) ? selected($item, self::$options['wf_slider_style'], true) : '';
+                            ?>
+                        >
+                            <?php echo esc_html( ucfirst( $item ) ); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             <?php
         }
